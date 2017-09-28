@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import App from './../Components/App';
 let appWrapper;
 
 describe('App', () => {
   beforeEach( () => {
-    appWrapper = mount(
+    appWrapper = shallow(
       <App />
     );
   });
@@ -56,20 +56,8 @@ describe('App', () => {
   });
 
   describe('when `step` is 5', () => {
-    it('doesnt render `NewCostOfLivingComponent` with default state', () => {
-      const test = () => {
-        appWrapper.setState({
-          step: 5
-        })
-      };
-      expect(test).toThrowError(TypeError);
-    }); 
-
-    it('renders `NewCostOfLivingComponent` when App has the right state', () => {
+    it('always renders `NewCostOfLivingComponent` ', () => {
       appWrapper.setState({
-        currentCity: "Amsterdam, Netherlands",
-        newCity: "The Hague (Den Haag), Netherlands",
-        newCitySlug: "the-hague",
         step: 5
       })
       expect(appWrapper.find('NewCostOfLivingComponent')).toHaveLength(1);

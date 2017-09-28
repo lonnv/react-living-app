@@ -273,7 +273,10 @@ class NewCostOfLivingComponent extends React.Component {
 	          .then((responseData) => {
 		          	let divElement = document.createElement("div");
 		          	divElement.innerHTML = responseData.summary;
-
+		          	
+		          	let byLine = divElement.querySelector('i')
+		          	byLine ? byLine.remove()
+		          	
 		          	let textElement = divElement.textContent || divElement.innerText || "";
 		          	let firstSentence = textElement.split(".")[0];
 
