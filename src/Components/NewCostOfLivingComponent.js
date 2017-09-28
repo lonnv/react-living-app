@@ -2,7 +2,7 @@ import React from 'react';
 import Cities from './SubComponents/Cities.js';
 import SpotAHomeDetailsComponent from './SubComponents/SpotAHomeDetailsComponent.js';
 import CityBanner from './SubComponents/CityBanner.js'
-
+import ComparableSalary from './SubComponents/ComparableSalary.js'
 
 let full_page_height = {
 	height: '100%'
@@ -80,50 +80,6 @@ let final_container = {
 	height: '20vh'
 }
 
-let intro = {
-	color: '#FFF',
-	fontFamily: 'Nunito, sans-serif',
-	fontSize: '25px',
-	fontWeight: '200',
-	textAlign: 'center',
-	marginTop: '1rem',
-	marginBottom: '0'
-}
-
-let comparable_salary_text = {
-	color: '#3DF2FF',
-	fontFamily: 'Nunito, sans-serif',
-	fontSize: '50px',
-	textAlign: 'center',
-	marginBottom: '3rem',
-	maxWidth: '500px',
-    marginLeft: 'auto',
-    marginRight: 'auto'
-}
-
-let alternative_comparable_salary_text = {
-	color: '#3DF2FF',
-	fontFamily: 'Nunito, sans-serif',
-	fontSize: '50px',
-	textAlign: 'center',
-	marginBottom: '7rem',
-	maxWidth: '500px',
-    marginLeft: 'auto',
-    marginRight: 'auto'
-}
-
-let sub_salary_text = {
-	color: '#FFF',
-	textAlign: 'center',
-	fontFamily: 'Nunito, sans-serif',
-	fontSize: '20px',
-	fontWeight: '400',
-	marginBottom: '0',
-	paddingTop: '10px',
-	display: 'block',
-	margin: '0 auto'
-}
-
 let icon_index = {
 	display: 'block',
 	margin: '0 auto'
@@ -174,10 +130,16 @@ let super_script = {
 	fontSize: '15px'
 }
 
-let salary_sub_properties = {
-	fontWeight: '700',
-	paddingLeft: '10px',
-    fontSize: '20px',
+let sub_salary_text = {
+  color: '#FFF',
+  textAlign: 'center',
+  fontFamily: 'Nunito, sans-serif',
+  fontSize: '20px',
+  fontWeight: '400',
+  marginBottom: '0',
+  paddingTop: '10px',
+  display: 'block',
+  margin: '0 auto'
 }
 
 class NewCostOfLivingComponent extends React.Component {
@@ -210,84 +172,39 @@ class NewCostOfLivingComponent extends React.Component {
 			}
 		}
 
-
-
+    this.fetchCurrencyResponseRates = this.fetchCurrencyResponseRates.bind(this);
 		this.changePosition = this.changePosition.bind(this);
-		this.changeCurrencyTypeAndValue = this.changeCurrencyTypeAndValue.bind(this);
 	}
 
 	componentDidMount () {
-		fetch('https://openexchangerates.org/api/latest.json?app_id=0cc840f2153c4d378b1a2687918435e7')
-          .then((response) => {
-        		if (!response.ok) {
-	          		throw Error('Something went wrong retreiving currency information :(');
-	          	}
-	          	return response.json();
-        	})
-          .then((responseData) => {
-    			this.setState({
-					currencyResponseRates: responseData.rates
-				});
-
-    			if (this.props.newCitySlug) {
-					fetch('https://api.teleport.org/api/urban_areas/slug:'+this.props.newCitySlug+'/salaries/')
-			          .then((response) => {
-			        		if (!response.ok) {
-				          		throw Error('Something went wrong retreiving city information :(');
-				          	}
-				          	return response.json();
-			        	})
-			          .then((responseData) => {
-			          		let randomObject = responseData.salaries[Math.floor(Math.random()*responseData.salaries.length)];
-			     			let randomPosition = randomObject.job.title;
-			     			let randomSalary = randomObject.salary_percentiles.percentile_50;
-				          	
-				          	let configuredSalary = (randomSalary/this.state.currencyResponseRates['USD'])*this.state.currencyResponseRates[this.state.targetCurrency];
-				          	let roundedConfiguredSalary = (Math.round(configuredSalary/100)*100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-				          	
-				          	this.setState({
-				          		listOfSalaries: responseData,
-				            	position: randomPosition,
-				            	salary: roundedConfiguredSalary
-				            });
-						})
-			          .catch((error) => {
-			          		console.log(error);
-			        	});
-		        }
-			})
-          .catch((error) => {
-          		console.log(error);
-        	});
-
-		if (this.props.newCitySlug) {
-		
-
-	        fetch('https://api.teleport.org/api/urban_areas/slug:'+this.props.newCitySlug+'/scores/')
-	          .then((response) => {
-	          		if (!response.ok) {
-		          		throw Error('Something went wrong retreiving city information :(');
-		          	}
-		          	return response.json();
-	        	})
-	          .then((responseData) => {
-		          	let divElement = document.createElement("div");
-		          	divElement.innerHTML = responseData.summary;
-		          	
-		          	let byLine = divElement.querySelector('i')
-		          	byLine ? byLine.remove()
-		          	
-		          	let textElement = divElement.textContent || divElement.innerText || "";
-		          	let firstSentence = textElement.split(".")[0];
-
-		          	this.setState({
-		            	bannerIntro: firstSentence
-		            });
-				})
-	          .catch((error) => {
-	          		console.log(error);
-	        	});
-	    }
+    Promise.resolve(this.fetchCurrencyResponseRates()).then(() => {
+    	if (this.props.newCitySlug) {
+      	fetch('https://api.teleport.org/api/urban_areas/slug:'+this.props.newCitySlug+'/salaries/')
+        .then((response) => {
+      		if (!response.ok) {
+          		throw Error('Something went wrong retreiving city information :(');
+          	}
+          	return response.json();
+      	})
+        .then((responseData) => {
+        	let randomObject = responseData.salaries[Math.floor(Math.random()*responseData.salaries.length)];
+   			  let randomPosition = randomObject.job.title;
+   			  let randomSalary = randomObject.salary_percentiles.percentile_50;
+          	
+        	let configuredSalary = (randomSalary/this.state.currencyResponseRates['USD'])*this.state.currencyResponseRates[this.state.targetCurrency];
+        	let roundedConfiguredSalary = (Math.round(configuredSalary/100)*100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          	
+        	this.setState({
+        		listOfSalaries: responseData,
+          	position: randomPosition,
+          	salary: roundedConfiguredSalary
+          });
+		    })
+        .catch((error) => {
+        		console.log(error);
+      	});
+      }
+    });    				
 	}
 
 	changePosition () {
@@ -304,21 +221,22 @@ class NewCostOfLivingComponent extends React.Component {
 		})
 	}
 
-	changeCurrencyTypeAndValue () {
-		let originalCurrencyType = this.props.currencyType;
-		let originalValue = this.props.exactNewCostOfLivingValue;
-		let newCurrencyType;
-		const dataSet = require('../data/cost_of_living_indices.json');
-
-		if (this.props.currencyType === dataSet[this.props.currentCity].currency_type) {
-			newCurrencyType = dataSet[this.props.newCity].currency_type;
-		} else if (this.props.currencyType === dataSet[this.props.newCity].currency_type) {
-			newCurrencyType = dataSet[this.props.currentCity].currency_type;
-		}
-
-		let exactValue = (originalValue/this.state.currencyResponseRates[originalCurrencyType])*this.state.currencyResponseRates[newCurrencyType];
-
-		this.props.changeCurrencyTypeAndValue(exactValue, (Math.round(exactValue/100)*100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), newCurrencyType);
+	fetchCurrencyResponseRates () {
+		fetch('https://openexchangerates.org/api/latest.json?app_id=0cc840f2153c4d378b1a2687918435e7')
+      .then((response) => {
+    		if (!response.ok) {
+        		throw Error('Something went wrong retreiving currency information :(');
+        }
+        	return response.json();
+    	})
+      .then((responseData) => {
+  			this.setState({
+				  currencyResponseRates: responseData.rates
+			  });
+			})
+			.catch((error) => {
+      	console.log(error);
+    	});
 	}
 
 	refreshCity = (e) => {
@@ -429,25 +347,25 @@ class NewCostOfLivingComponent extends React.Component {
               bannerImage={this.state.bannerImage}
               bannerIntro={this.state.bannerIntro}
 							newCitySlug={this.props.newCitySlug}
-							newCity={this.props.newCity}			
-						/>
-				
+							newCity={this.props.newCity}
+						/>				
 
 
 						<div style={middle_container} className="container" >
 						  // MOVE TO ComparableSalary Component
-							<p style={intro} className="comparable-salary">To have the same standard of living, a comparable salary would be</p>
-								{(this.state.currentCurrency !== this.state.targetCurrency) && <div> 
-								{(this.props.newCitySlug) && <p style={comparable_salary_text}>≈ {this.props.currencyType} {this.props.value} 
-															<sub style={salary_sub_properties} className='tooltip-bottom' data-tooltip='Click to convert the currency!' onClick={this.changeCurrencyTypeAndValue}><i className="fa fa-exchange exchange-icon" aria-hidden="true"></i></sub></p>}
-								{(!this.props.newCitySlug) && <p style={alternative_comparable_salary_text}>≈ {this.props.currencyType} {this.props.value} 
-															<sub style={salary_sub_properties} className='tooltip-bottom' data-tooltip='Click to convert the currency!' onClick={this.changeCurrencyTypeAndValue}><i className="fa fa-exchange exchange-icon" aria-hidden="true"></i></sub></p>}
-								</div>}
-								{(this.state.currentCurrency === this.state.targetCurrency) && <div> 
-								{(this.props.newCitySlug) && <p style={comparable_salary_text} onClick={this.changeCurrencyTypeAndValue}>≈ {this.props.currencyType} {this.props.value}</p>}
-								{(!this.props.newCitySlug) && <p style={alternative_comparable_salary_text} onClick={this.changeCurrencyTypeAndValue}>≈ {this.props.currencyType} {this.props.value}</p>}
-								</div>}
-
+						  <ComparableSalary 
+						    exactNewCostOfLivingValue={this.props.exactNewCostOfLivingValue}
+                currentCurrency={this.state.currentCurrency}
+                targetCurrency={this.state.targetCurrency}
+                currencyType={this.props.currencyType}
+                value={this.props.value}
+                newCitySlug={this.props.newCitySlug}
+							  newCity={this.props.newCity}
+							  currentCity={this.props.currentCity}
+							  currencyResponseRates={this.state.currencyResponseRates}
+							  changeCurrencyTypeAndValue={this.props.changeCurrencyTypeAndValue}			
+						  />
+		
 							// MOVE TO CompareCityInfo Component
 							<div className='row compare-city-info'>
 								{!this.isASpotAHomeCity() && <div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>

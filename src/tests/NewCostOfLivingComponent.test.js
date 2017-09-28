@@ -58,7 +58,7 @@ describe('NewCOL', () => {
   });
 
   it("renders a RandomCareer section when the newCitySlug is defined", () => {
-    const randomCareerSection = newCOL().find("div.random-section");
+    const randomC2areerSection = newCOL().find("div.random-section");
     expect(randomCareerSection.length).toBe(1);
   });
 
@@ -67,12 +67,6 @@ describe('NewCOL', () => {
     const randomCareerSection = newCOL().find("div.random-section");
     expect(randomCareerSection.length).toBe(0);
   });
-
-  //Needs work
-  // it("renders SpotAtHomeDetails when openSpotAHomeDetails is set to true", () => {
-  //   newCOL().setProps({newCity: 'London, United Kingdom'});
-  //   expect(newCOL().find('SpotAtHomeDetailsComponent')).toHaveLength(1);
-  // });
 });
 
   

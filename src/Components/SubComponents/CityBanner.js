@@ -5,7 +5,6 @@ let image_container = {
   position: 'relative'
 }
 
-
 class CityBanner extends React.Component {
   constructor (props) {
     super(props);
@@ -54,7 +53,7 @@ class CityBanner extends React.Component {
         divElement.innerHTML = responseData.summary;
         
         let byLine = divElement.querySelector('i')
-        byLine ? byLine.remove()
+        if(byLine){ byLine.remove()};
 
         let textElement = divElement.textContent || divElement.innerText || "";
         let firstSentence = textElement.split(".")[0];
