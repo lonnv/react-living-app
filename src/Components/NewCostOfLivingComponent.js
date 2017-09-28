@@ -1,8 +1,10 @@
 import React from 'react';
-import Cities from './SubComponents/Cities.js';
-import SpotAHomeDetailsComponent from './SubComponents/SpotAHomeDetailsComponent.js';
-import CityBanner from './SubComponents/CityBanner.js'
-import ComparableSalary from './SubComponents/ComparableSalary.js'
+import Cities from './SubComponents/Cities';
+import SpotAHomeDetailsComponent from './SubComponents/SpotAHomeDetailsComponent';
+import CityBanner from './SubComponents/CityBanner'
+import ComparableSalary from './SubComponents/ComparableSalary'
+import CompareCityInfo from './SubComponents/CompareCityInfo'
+import RandomPosition from './SubComponents/RandomPosition'
 
 let full_page_height = {
 	height: '100%'
@@ -68,90 +70,18 @@ let continue_button = {
     margin: '0 10px'
 }
 
-
 let middle_container = {
 	position: 'relative',
 	padding: '30px'
 }
 
-let final_container = {
-	position: 'relative',
-	textAlign: 'center',
-	height: '20vh'
-}
-
-let icon_index = {
-	display: 'block',
-	margin: '0 auto'
-}
-
-let percent_index_text = {
-	color: '#FFF',
-	fontFamily: 'Nunito, sans-serif',
-	fontSize: '30px',
-	textAlign: 'center',
-	width: '50%',
-	marginBottom: '0',
-	display: 'block',
-	margin: '0 auto'
-}
-
-let percent_index_text_no_change = {
-	color: '#FFF',
-	fontFamily: 'Nunito, sans-serif',
-	fontSize: '15.5px',
-	textAlign: 'center',
-	width: '50%',
-	display: 'block',
-	margin: '12px auto'
-}
-
-let up_arrow_index = {
-	color: 'rgb(61, 242, 255)',
-	fontSize: '20px',
-	marginLeft: '3px'
-}
-
-let down_arrow_index = {
-	color: 'rgb(234, 76, 136)',
-	fontSize: '20px',
-	marginLeft: '3px'
-}
-
-let random_section = {
-	position: 'absolute',
-	width: '100%',
-	bottom: '30%',
-	left: '0'
-}
-
-let super_script = {
-	verticalAlign: 'super',
-	fontSize: '15px'
-}
-
-let sub_salary_text = {
-  color: '#FFF',
-  textAlign: 'center',
-  fontFamily: 'Nunito, sans-serif',
-  fontSize: '20px',
-  fontWeight: '400',
-  marginBottom: '0',
-  paddingTop: '10px',
-  display: 'block',
-  margin: '0 auto'
-}
-
 class NewCostOfLivingComponent extends React.Component {
 	constructor (props) {
 		super(props);
-
 		const dataSet = require('../data/cost_of_living_indices.json');
 
 		if (this.props.newCitySlug) {		
 			this.state = {
-				bannerImage: '',
-				bannerIntro: '',
 				listOfSalaries: '',
 				position: '',
 				currentCurrency: dataSet[this.props.currentCity].currency_type,
@@ -161,7 +91,6 @@ class NewCostOfLivingComponent extends React.Component {
 				onLastPage: true,
 				openSpotAHomeDetails: false
 			}
-			// Add if oldCitySlug merge in extra state
 		} else {
 			this.state = {
 				currentCurrency: dataSet[this.props.currentCity].currency_type,
@@ -171,7 +100,6 @@ class NewCostOfLivingComponent extends React.Component {
 				openSpotAHomeDetails: false
 			}
 		}
-
     this.fetchCurrencyResponseRates = this.fetchCurrencyResponseRates.bind(this);
 		this.changePosition = this.changePosition.bind(this);
 	}
@@ -278,55 +206,14 @@ class NewCostOfLivingComponent extends React.Component {
 	}
 
 	render () {
-		let rentPercentChange;
-		let rent_increase_format;
-		let groceriesPercentChange;
-		let groceries_increase_format;
-		let restaurantPercentChange;
-		let restaurant_increase_format;
-		let purchasingPercentChange;
-		let purchasing_increase_format;
-		const dataSet = require('../data/cost_of_living_indices.json');
 
-		if (this.props.rentPercentChange > 0) {
-			rentPercentChange = this.props.rentPercentChange;
-			rent_increase_format = true;
-		} else if (this.props.rentPercentChange <= 0) {
-			rentPercentChange = -(this.props.rentPercentChange);
-			rent_increase_format = false;
-		}
-
-		if (this.props.groceriesPercentChange > 0) {
-			groceriesPercentChange = this.props.groceriesPercentChange;
-			groceries_increase_format = true;
-		} else if (this.props.groceriesPercentChange <= 0) {
-			groceriesPercentChange = -(this.props.groceriesPercentChange);
-			groceries_increase_format = false;
-		}
-
-		if (this.props.restaurantPercentChange > 0) {
-			restaurantPercentChange = this.props.restaurantPercentChange;
-			restaurant_increase_format = true;
-		} else if (this.props.restaurantPercentChange <= 0) {
-			restaurantPercentChange = -(this.props.restaurantPercentChange);
-			restaurant_increase_format = false;
-		}
-
-		if (this.props.purchasingPercentChange > 0) {
-			purchasingPercentChange = this.props.purchasingPercentChange;
-			purchasing_increase_format = true;
-		} else if (this.props.purchasingPercentChange <= 0) {
-			purchasingPercentChange = -(this.props.purchasingPercentChange);
-			purchasing_increase_format = false;
-		}
-
+		const dataSet = require('../data/cost_of_living_indices.json');		
 		return (
 			<div style={full_page_height}>
 				{!this.state.openSpotAHomeDetails && <div>
 					<div style={buttons_container}>
 						<button style={continue_button} onClick={this.props.resetToFirstStep}>Menu</button>
 					</div>
-
 
 					{(this.props.currencyType === dataSet[this.props.currentCity].currency_type) && <div>
 						<div className="search_question_container tooltip-left" data-tooltip={"Pick another city to compare its Cost of Living to living in -  " + this.props.currentCity + " with a net income of " + this.state.currentCurrency + " " + this.props.currentCostOfLiving + "."}>
@@ -351,8 +238,7 @@ class NewCostOfLivingComponent extends React.Component {
 						/>				
 
 
-						<div style={middle_container} className="container" >
-						  // MOVE TO ComparableSalary Component
+					<div style={middle_container} className="container" >
 						  <ComparableSalary 
 						    exactNewCostOfLivingValue={this.props.exactNewCostOfLivingValue}
                 currentCurrency={this.state.currentCurrency}
@@ -365,118 +251,24 @@ class NewCostOfLivingComponent extends React.Component {
 							  currencyResponseRates={this.state.currencyResponseRates}
 							  changeCurrencyTypeAndValue={this.props.changeCurrencyTypeAndValue}			
 						  />
-		
-							// MOVE TO CompareCityInfo Component
-							<div className='row compare-city-info'>
-								{!this.isASpotAHomeCity() && <div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
-									<div style={icon_index} id="icon-box">
-		  								<span><i className="fa fa-home fa fa-lg-modification"></i></span>
-									</div>
-									<p style={sub_salary_text}>Rent/Living</p>
-									{(rent_increase_format) && <p style={percent_index_text} className="tooltip-bottom" 
-									data-tooltip={'Rent is '+rentPercentChange+'% more expensive in '+this.props.newCity+'!'}> {rentPercentChange}%
-										<i style={up_arrow_index} className="fa fa-arrow-up" aria-hidden="true"></i>
-									</p>}
-									{(!rent_increase_format && this.props.rentPercentChange !== 0) && <p style={percent_index_text} className="tooltip-bottom" 
-									data-tooltip={'Rent is cheaper by '+rentPercentChange+'% in '+this.props.newCity+'.'}> {rentPercentChange}%
-										<i style={down_arrow_index} className="fa fa-arrow-down" aria-hidden="true"></i>
-									</p>}
-									{(!rent_increase_format && this.props.rentPercentChange === 0) && <p style={percent_index_text_no_change} className="tooltip-bottom" 
-									data-tooltip={'Rent is about the same!'}> It's the same!
-									</p>}
-								</div>}
 
-								{this.isASpotAHomeCity() && <div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
-									<div onClick={this.openSpotAHomeDetails} style={icon_index} id="spotahome-icon-box">
-		  								<span><i className="fa fa-strikethrough fa fa-spotahome-lg-modification"></i></span>
-									</div>
-									<p onClick={this.openSpotAHomeDetails} style={sub_salary_text} className="tooltip-top" data-tooltip={'Let Spotahome help in your move to ' + this.props.newCity + '!'}>Rent/Living</p>
-									{(rent_increase_format) && <p style={percent_index_text} className="tooltip-bottom" 
-									data-tooltip={'Rent is '+rentPercentChange+'% more expensive in '+this.props.newCity+'!'}> {rentPercentChange}%
-										<i style={up_arrow_index} className="fa fa-arrow-up" aria-hidden="true"></i>
-									</p>}
-									{(!rent_increase_format && this.props.rentPercentChange !== 0) && <p style={percent_index_text} className="tooltip-bottom" 
-									data-tooltip={'Rent is cheaper by '+rentPercentChange+'% in '+this.props.newCity+'.'} onClick={this.openSpotAHomeDetails}> {rentPercentChange}%
-										<i style={down_arrow_index} className="fa fa-arrow-down" aria-hidden="true"></i>
-									</p>}
-									{(!rent_increase_format && this.props.rentPercentChange === 0) && <p style={percent_index_text_no_change} className="tooltip-bottom" 
-									data-tooltip={'Rent is about the same!'} onClick={this.openSpotAHomeDetails}> It's the same!
-									</p>}
-								</div>}
-								<div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
-									<div style={icon_index} id="icon-box">
-		  								<span><i className="fa fa-shopping-cart fa fa-lg-modification"></i></span>
-									</div>
-									<p style={sub_salary_text}>Groceries</p>
-									{groceries_increase_format && <p style={percent_index_text} className="tooltip-bottom"
-									data-tooltip={'Groceries are '+groceriesPercentChange+'% more expensive in '+this.props.newCity+'!'} > {groceriesPercentChange}%
-										<i style={up_arrow_index} className="fa fa-arrow-up" aria-hidden="true"></i>
-									</p>}
-									{(!groceries_increase_format && this.props.groceriesPercentChange !== 0) && <p style={percent_index_text} className="tooltip-bottom"
-									data-tooltip={'Groceries are cheaper by '+groceriesPercentChange+'% in '+this.props.newCity+'.'} > {groceriesPercentChange}%
-										<i style={down_arrow_index} className="fa fa-arrow-down" aria-hidden="true"></i>
-									</p>}
-									{(!groceries_increase_format && this.props.groceriesPercentChange === 0) && <p style={percent_index_text_no_change} className="tooltip-bottom"
-									data-tooltip={'Groceries are about the same!'} > It's the same!
-									</p>}
-								</div>
-								<div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
-									<div style={icon_index} id="icon-box">
-		  								<span><i className="fa fa-cutlery fa fa-lg-modification"></i></span>
-									</div>
-									<p style={sub_salary_text}>Dining Out</p>
-									{restaurant_increase_format && <p style={percent_index_text} className="tooltip-bottom" 
-									data-tooltip={'Dining out is '+restaurantPercentChange+'% more expensive in '+this.props.newCity+'!'} > {restaurantPercentChange}%
-										<i style={up_arrow_index} className="fa fa-arrow-up" aria-hidden="true"></i>
-									</p>}
-									{(!restaurant_increase_format && this.props.restaurantPercentChange !== 0) && <p style={percent_index_text} className="tooltip-bottom" 
-									data-tooltip={'Dining out is cheaper by '+restaurantPercentChange+'% in '+this.props.newCity+'.'} > {restaurantPercentChange}%
-										<i style={down_arrow_index} className="fa fa-arrow-down" aria-hidden="true"></i>
-									</p>}
-									{(!restaurant_increase_format && this.props.restaurantPercentChange === 0) && <p style={percent_index_text_no_change} className="tooltip-bottom" 
-									data-tooltip={'Dining out is about the same!'} > It's the same!
-									</p>}
-								</div>
-								<div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
-									<div style={icon_index} id="icon-box">
-		  								<span><i className="fa fa-star fa fa-lg-modification"></i></span>
-									</div>
-									<p style={sub_salary_text}>Purchasing Power</p>
-									{purchasing_increase_format && <p style={percent_index_text} className="tooltip-bottom"
-									data-tooltip={'Purchasing Power (i.e. the number of of goods/services that can be purchased by a unit of currency) is '+purchasingPercentChange+'% higher in '+this.props.newCity+'.'} > {purchasingPercentChange}%
-										<i style={down_arrow_index} className="fa fa-arrow-up" aria-hidden="true"></i>
-									</p>}
-									{(!purchasing_increase_format && this.props.purchasingPercentChange !== 0) && <p style={percent_index_text} className="tooltip-bottom"
-									data-tooltip={'Purchasing Power (i.e. the number of of goods/services that can be purchased by a unit of currency) is '+purchasingPercentChange+'% lower in '+this.props.newCity+'!'} > {purchasingPercentChange}%
-										<i style={up_arrow_index} className="fa fa-arrow-down" aria-hidden="true"></i>
-									</p>}
-									{(!purchasing_increase_format && this.props.purchasingPercentChange === 0) && <p style={percent_index_text_no_change} className="tooltip-bottom"
-									data-tooltip={'The purchasing power is about the same!'} > It's the same!
-									</p>}
-								</div>
-							</div>
-             // END of infographic section
-						</div>
+						  <CompareCityInfo
+               isASpotAHomeCity={this.isASpotAHomeCity}
+               openSpotAHomeDetails={this.openSpotAHomeDetails}
+						   newCity={this.props.newCity}
+						   currentCity={this.props.currentCity}
+						  />
+					</div>
 
-						//MOVE to RandomCareer component
-						{(this.props.newCitySlug) && <div style={final_container} className="container">
-							<div style={random_section} className='random-section'>
-								<p className='random-salary-text'>The median salary for a/an&nbsp;
-									<span className='random-position tooltip-top' onClick={this.changePosition}
-									data-tooltip='Click for another occupation!'> {this.state.position} 
-										<span style={super_script}> <i className="fa fa-user" aria-hidden="true"></i> </span>&nbsp;
-									</span> 
-								in {this.props.newCity} is around <span className='random-salary'>{this.state.targetCurrency} {this.state.salary}</span></p>
-							</div>
-						</div>}
-
+						{(this.props.newCitySlug) && <RandomPosition />}
 
 					</div>
 				</div>}
 
 				{(this.state.openSpotAHomeDetails) && 
 					<SpotAHomeDetailsComponent closeSpotAHomeDetails={this.closeSpotAHomeDetails}
-						newCity={this.props.newCity}/>}
+						newCity={this.props.newCity}/>
+				}
 			</div>
 		);
 	}
