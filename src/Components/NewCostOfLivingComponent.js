@@ -1,7 +1,8 @@
 import React from 'react';
 import Cities from './SubComponents/Cities.js';
 import SpotAHomeDetailsComponent from './SubComponents/SpotAHomeDetailsComponent.js';
-import banner_image_url from '../sky_banner.png';
+import CityBanner from './SubComponents/CityBanner.js'
+
 
 let full_page_height = {
 	height: '100%'
@@ -67,9 +68,6 @@ let continue_button = {
     margin: '0 10px'
 }
 
-let image_container = {
-	position: 'relative'
-}
 
 let middle_container = {
 	position: 'relative',
@@ -183,7 +181,6 @@ let salary_sub_properties = {
 }
 
 class NewCostOfLivingComponent extends React.Component {
-
 	constructor (props) {
 		super(props);
 
@@ -202,6 +199,7 @@ class NewCostOfLivingComponent extends React.Component {
 				onLastPage: true,
 				openSpotAHomeDetails: false
 			}
+			// Add if oldCitySlug merge in extra state
 		} else {
 			this.state = {
 				currentCurrency: dataSet[this.props.currentCity].currency_type,
@@ -211,6 +209,8 @@ class NewCostOfLivingComponent extends React.Component {
 				openSpotAHomeDetails: false
 			}
 		}
+
+
 
 		this.changePosition = this.changePosition.bind(this);
 		this.changeCurrencyTypeAndValue = this.changeCurrencyTypeAndValue.bind(this);
@@ -261,21 +261,7 @@ class NewCostOfLivingComponent extends React.Component {
         	});
 
 		if (this.props.newCitySlug) {
-			fetch('https://api.teleport.org/api/urban_areas/slug:'+this.props.newCitySlug+'/images/')
-	          .then((response) => {
-		          	if (!response.ok) {
-		          		throw Error('Something went wrong retreiving an image :(');
-		          	}
-		          	return response.json();
-	        	})
-	          .then((responseData) => {
-		            this.setState({
-						bannerImage: responseData.photos[0].image.web
-					});
-				})
-	          .catch((error) => {
-	          		console.log(error);
-	        	});
+		
 
 	        fetch('https://api.teleport.org/api/urban_areas/slug:'+this.props.newCitySlug+'/scores/')
 	          .then((response) => {
@@ -419,6 +405,8 @@ class NewCostOfLivingComponent extends React.Component {
 					<div style={buttons_container}>
 						<button style={continue_button} onClick={this.props.resetToFirstStep}>Menu</button>
 					</div>
+
+
 					{(this.props.currencyType === dataSet[this.props.currentCity].currency_type) && <div>
 						<div className="search_question_container tooltip-left" data-tooltip={"Pick another city to compare its Cost of Living to living in -  " + this.props.currentCity + " with a net income of " + this.state.currentCurrency + " " + this.props.currentCostOfLiving + "."}>
 							<i style={information_icon} className="fa fa-question" aria-hidden="true"></i>
@@ -427,25 +415,24 @@ class NewCostOfLivingComponent extends React.Component {
 							<Cities onLastPage={this.state.onLastPage} onChange={this.refreshCity} searchable />
 						</div>
 					</div>}
+
+
 					{(this.props.currencyType !== dataSet[this.props.currentCity].currency_type) && <div style={information_icon_container} className="tooltip-left" data-tooltip='Convert back to your base currency to be able compare the Cost of Living with another city!'>
 						<i style={information_icon} className="fa fa-info" aria-hidden="true"></i>
 					</div>}
 
 					<div style={full_page_height}>
-						<div style={image_container} className="background-darken">
-							{(this.props.newCitySlug) && <img src={this.state.bannerImage} style={{width: '100%', opacity: '0.4', 'height': '30vh'}} alt='City Banner'/>}
-							{(!this.props.newCitySlug) && <img src={banner_image_url} style={{width: '100%', opacity: '0.7', 'height': '30vh'}} alt='Stock Banner'/>}
-							<div>
-								{(this.props.newCitySlug) && <div className="banner-image-intro">{this.props.newCity}<br/>
-									{(this.props.newCitySlug !== 'london' && this.props.newCitySlug !== 'moscow' && this.props.newCitySlug !== 'brussels') && <span className="banner-image-sub-intro">{this.state.bannerIntro}.</span>}
-									{(this.props.newCitySlug === 'london') && <span className="banner-image-sub-intro">London is one of the world's most inviting cities for startups, as well as home to world-class schools, universities and museums.</span>}
-									{(this.props.newCitySlug === 'moscow') && <span className="banner-image-sub-intro">Moscow is a lively city, rich in history and culture and is Russia's national center for visual and performing arts.</span>}
-									{(this.props.newCitySlug === 'brussels') && <span className="banner-image-sub-intro">Life in Brussels is a culturally rich, central-European adventure, home to much of the European Union infrastructure</span>}
-								</div>}
-								{(!this.props.newCitySlug) && <div className="alternative-banner-image-intro">{this.props.newCity}</div>}
-							</div>
-						</div>
-						<div style={middle_container} className="container">
+            <CityBanner  
+              bannerImage={this.state.bannerImage}
+              bannerIntro={this.state.bannerIntro}
+							newCitySlug={this.props.newCitySlug}
+							newCity={this.props.newCity}			
+						/>
+				
+
+
+						<div style={middle_container} className="container" >
+						  // MOVE TO ComparableSalary Component
 							<p style={intro} className="comparable-salary">To have the same standard of living, a comparable salary would be</p>
 								{(this.state.currentCurrency !== this.state.targetCurrency) && <div> 
 								{(this.props.newCitySlug) && <p style={comparable_salary_text}>≈ {this.props.currencyType} {this.props.value} 
@@ -457,6 +444,8 @@ class NewCostOfLivingComponent extends React.Component {
 								{(this.props.newCitySlug) && <p style={comparable_salary_text} onClick={this.changeCurrencyTypeAndValue}>≈ {this.props.currencyType} {this.props.value}</p>}
 								{(!this.props.newCitySlug) && <p style={alternative_comparable_salary_text} onClick={this.changeCurrencyTypeAndValue}>≈ {this.props.currencyType} {this.props.value}</p>}
 								</div>}
+
+							// MOVE TO CompareCityInfo Component
 							<div className='row compare-city-info'>
 								{!this.isASpotAHomeCity() && <div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
 									<div style={icon_index} id="icon-box">
@@ -475,6 +464,7 @@ class NewCostOfLivingComponent extends React.Component {
 									data-tooltip={'Rent is about the same!'}> It's the same!
 									</p>}
 								</div>}
+
 								{this.isASpotAHomeCity() && <div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
 									<div onClick={this.openSpotAHomeDetails} style={icon_index} id="spotahome-icon-box">
 		  								<span><i className="fa fa-strikethrough fa fa-spotahome-lg-modification"></i></span>
@@ -544,9 +534,12 @@ class NewCostOfLivingComponent extends React.Component {
 									</p>}
 								</div>
 							</div>
+             // END of infographic section
 						</div>
+
+						//MOVE to RandomCareer component
 						{(this.props.newCitySlug) && <div style={final_container} className="container">
-							<div style={random_section} className="random-section">
+							<div style={random_section} className='random-section'>
 								<p className='random-salary-text'>The median salary for a/an&nbsp;
 									<span className='random-position tooltip-top' onClick={this.changePosition}
 									data-tooltip='Click for another occupation!'> {this.state.position} 
@@ -555,11 +548,14 @@ class NewCostOfLivingComponent extends React.Component {
 								in {this.props.newCity} is around <span className='random-salary'>{this.state.targetCurrency} {this.state.salary}</span></p>
 							</div>
 						</div>}
+
+
 					</div>
 				</div>}
+
 				{(this.state.openSpotAHomeDetails) && 
 					<SpotAHomeDetailsComponent closeSpotAHomeDetails={this.closeSpotAHomeDetails}
-											   newCity={this.props.newCity}/>}
+						newCity={this.props.newCity}/>}
 			</div>
 		);
 	}
