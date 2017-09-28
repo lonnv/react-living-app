@@ -446,7 +446,7 @@ class NewCostOfLivingComponent extends React.Component {
 							</div>
 						</div>
 						<div style={middle_container} className="container">
-							<p style={intro}>To have the same standard of living, a comparable salary would be</p>
+							<p style={intro} className="comparable-salary">To have the same standard of living, a comparable salary would be</p>
 								{(this.state.currentCurrency !== this.state.targetCurrency) && <div> 
 								{(this.props.newCitySlug) && <p style={comparable_salary_text}>≈ {this.props.currencyType} {this.props.value} 
 															<sub style={salary_sub_properties} className='tooltip-bottom' data-tooltip='Click to convert the currency!' onClick={this.changeCurrencyTypeAndValue}><i className="fa fa-exchange exchange-icon" aria-hidden="true"></i></sub></p>}
@@ -457,7 +457,7 @@ class NewCostOfLivingComponent extends React.Component {
 								{(this.props.newCitySlug) && <p style={comparable_salary_text} onClick={this.changeCurrencyTypeAndValue}>≈ {this.props.currencyType} {this.props.value}</p>}
 								{(!this.props.newCitySlug) && <p style={alternative_comparable_salary_text} onClick={this.changeCurrencyTypeAndValue}>≈ {this.props.currencyType} {this.props.value}</p>}
 								</div>}
-							<div className='row'>
+							<div className='row compare-city-info'>
 								{!this.isASpotAHomeCity() && <div className='col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding'>
 									<div style={icon_index} id="icon-box">
 		  								<span><i className="fa fa-home fa fa-lg-modification"></i></span>
@@ -546,7 +546,7 @@ class NewCostOfLivingComponent extends React.Component {
 							</div>
 						</div>
 						{(this.props.newCitySlug) && <div style={final_container} className="container">
-							<div style={random_section}>
+							<div style={random_section} className="random-section">
 								<p className='random-salary-text'>The median salary for a/an&nbsp;
 									<span className='random-position tooltip-top' onClick={this.changePosition}
 									data-tooltip='Click for another occupation!'> {this.state.position} 
