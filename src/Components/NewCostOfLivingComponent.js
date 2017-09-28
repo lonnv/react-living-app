@@ -116,7 +116,6 @@ class NewCostOfLivingComponent extends React.Component {
 	}
 
 	render () {
-
 		const dataSet = require('../data/cost_of_living_indices.json');		
 		return (
 			<div style={full_page_height}>
@@ -134,7 +133,6 @@ class NewCostOfLivingComponent extends React.Component {
 						</div>
 					</div>}
 
-
 					{(this.props.currencyType !== dataSet[this.props.currentCity].currency_type) && <div style={information_icon_container} className="tooltip-left" data-tooltip='Convert back to your base currency to be able compare the Cost of Living with another city!'>
 						<i style={information_icon} className="fa fa-info" aria-hidden="true"></i>
 					</div>}
@@ -146,7 +144,6 @@ class NewCostOfLivingComponent extends React.Component {
 							newCitySlug={this.props.newCitySlug}
 							newCity={this.props.newCity}
 						/>				
-
 
 					<div style={middle_container} className="container" >
 						  <ComparableSalary 

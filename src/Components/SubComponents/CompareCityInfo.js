@@ -54,32 +54,28 @@ class CompareCityInfo extends React.Component {
       percentChanges: this.getPercentChanges()
     }
     this.getPercentChanges = this.getPercentChanges.bind(this);
-
   }
 
   getPercentChanges() {
     const dataSet = require('./../../data/cost_of_living_indices.json');
-  
+
     const getPercentChangeData = (category) => {
       let newCityIndex = dataSet[this.props.newCity][`${category}_index`] ;
       let currentCityIndex = dataSet[this.props.currentCity][`${category}_index`];
       let percentChange = Math.round(( newCityIndex - currentCityIndex )/currentCityIndex * 100);
-      return (
-        {
-          percentChange: percentChange,
-          absoluteChange: Math.abs(percentChange),
-          positiveChange: (percentChange > 0) ? true : false
-        }
-      )
+      return ({
+        percentChange: percentChange,
+        absoluteChange: Math.abs(percentChange),
+        positiveChange: (percentChange > 0) ? true : false
+      })
     };
 
-     let percentChanges = {
+    return ({
       rent: getPercentChangeData("rent"),
       groceries: getPercentChangeData("groceries"),
       restaurant: getPercentChangeData("restaurant"),
       purchasing: getPercentChangeData("purchasing")
-    }
-    return percentChanges
+    })
   }
   render () {
     return (
